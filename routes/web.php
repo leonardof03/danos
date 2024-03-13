@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DanoAIController;
 use App\Http\Controllers\OpenAIController;
 
 /*
@@ -18,3 +19,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/retomas/{retomaId}/analyze-image', [OpenAIController::class, 'analyzeImagesAndUpdateDescription']);
+Route::get('/analyze-damage-images', [DanoAIController::class, 'analyzeDamageImagesAndUpdateDescription']);

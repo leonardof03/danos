@@ -61,7 +61,7 @@ return [
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
-            'level' => 'info', // Altere o nível de log conforme necessário
+            'level' => 'debug', // Altere o nível de log conforme necessário
         ],
 
         'daily' => [
