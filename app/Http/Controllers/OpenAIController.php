@@ -23,6 +23,7 @@ class OpenAIController extends Controller
                 // Itera sobre cada foto para analisar
                 foreach ($fotos as $foto) {
                     // Faz a análise da foto
+                    Log::info('Analisando a imagem: ' . $foto); // Depuração: Registra a URL da imagem antes da análise
                     $description = $this->analyzePhoto($foto);
 
                     // Atualiza o campo de descrição do Retoma
@@ -44,6 +45,7 @@ class OpenAIController extends Controller
         $client = new Client();
 
         try {
+            Log::info('Enviando solicitação para análise da OpenAI...'); // Depuração: Registra a solicitação para análise
             $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
@@ -71,7 +73,7 @@ class OpenAIController extends Controller
                     'max_tokens' => 4000,
                 ],
             ]);
-
+            
             $responseData = json_decode($response->getBody()->getContents(), true);
             $description = $responseData['choices'][0]['message']['content'] ?? 'Descrição não disponível';
 
