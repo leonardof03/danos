@@ -9,13 +9,38 @@ use Illuminate\Support\Facades\Log;
 
 class OpenAIController extends Controller
 {
-    public function analyzeImagesAndUpdateDescription( $retomaId)
+    public function analyzeImagesAndUpdateDescription($retomaId)
     {
-        $retoma = Retoma::findOrFail($retomaId);
+        try {
+            // Busca o Retoma pelo ID
+            $retoma = Retoma::findOrFail($retomaId);
 
-        // Substitua pela lógica de obtenção da URL da imagem
-        $imageUrl = 'https://drive.google.com/uc?export=view&id=18Pth6R8CDcFeiCDioMdng2EvHvDLyiHB';
+            // Recupera as fotos do Retoma (supondo que seja um array)
+            $fotos = $retoma->fotos;
 
+            // Verifica se existem fotos
+            if (!empty($fotos)) {
+                // Itera sobre cada foto para analisar
+                foreach ($fotos as $foto) {
+                    // Faz a análise da foto
+                    $description = $this->analyzePhoto($foto);
+
+                    // Atualiza o campo de descrição do Retoma
+                    $retoma->update(['descricao' => $description]);
+                }
+
+                return response()->json(['success' => true, 'message' => 'Descrições atualizadas com sucesso.']);
+            } else {
+                return response()->json(['error' => 'Nenhuma foto encontrada para análise.'], 404);
+            }
+        } catch (\Exception $e) {
+            Log::error('Erro ao processar a análise das fotos: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao processar a análise das fotos.'], 500);
+        }
+    }
+
+    private function analyzePhoto($photoUrl)
+    {
         $client = new Client();
 
         try {
@@ -32,17 +57,12 @@ class OpenAIController extends Controller
                             'content' => [
                                 [
                                     'type' => 'text',
-                                    'text' => 'Esta é uma avaliação de um veículo para fins de seguro. Por favor, forneça uma descrição detalhada do carro na imagem, incluindo a marca, modelo, ano, condição geral, quaisquer danos visíveis, características especiais e quaisquer outros detalhes relevantes que possam afetar a avaliação do seguro.
-
-                                        Por favor, inclua também qualquer informação adicional que você considere importante para a avaliação do seguro do veículo.
-                                        
-                                        Lembre-se de que quanto mais detalhada for a descrição, mais precisa será a avaliação do seguro.
-',
+                                    'text' => 'Esta é uma avaliação de um veículo para fins de seguro. Por favor, forneça uma descrição detalhada do carro na imagem, incluindo a marca, modelo, ano, condição geral, quaisquer danos visíveis, características especiais e quaisquer outros detalhes relevantes que possam afetar a avaliação do seguro. Por favor, inclua também qualquer informação adicional que você considere importante para a avaliação do seguro do veículo. Lembre-se de que quanto mais detalhada for a descrição, mais precisa será a avaliação do seguro.',
                                 ],
                                 [
                                     'type' => 'image_url',
                                     'image_url' => [
-                                        'url' => $imageUrl, // Certifique-se que esta é a URL pública
+                                        'url' => $photoUrl, // Certifique-se que esta é a URL pública
                                     ],
                                 ],
                             ],
@@ -55,14 +75,10 @@ class OpenAIController extends Controller
             $responseData = json_decode($response->getBody()->getContents(), true);
             $description = $responseData['choices'][0]['message']['content'] ?? 'Descrição não disponível';
 
-            // Atualiza o campo de descrição do modelo Retoma
-            $retoma->update(['descricao' => $description]);
-
-            return response()->json(['success' => true, 'description' => $description]);
+            return $description;
         } catch (\Exception $e) {
             Log::error('Erro ao comunicar com a OpenAI: ' . $e->getMessage());
-            return response()->json(['error' => 'Falha ao comunicar com a OpenAI.'], 500);
+            return 'Descrição não disponível';
         }
     }
 }
-
