@@ -64,7 +64,7 @@ class OpenAIController extends Controller
                             'content' => [
                                 [
                                     'type' => 'text',
-                                    'text' => 'Esta é uma avaliação de um veículo para fins de seguro. Por favor, forneça uma descrição detalhada do carro na imagem, incluindo a marca, modelo, ano, condição geral, quaisquer danos visíveis, características especiais e quaisquer outros detalhes relevantes que possam afetar a avaliação do seguro. Por favor, inclua também qualquer informação adicional que você considere importante para a avaliação do seguro do veículo. Lembre-se de que quanto mais detalhada for a descrição, mais precisa será a avaliação do seguro.',
+                                    'text' => 'Por favor, forneça uma descrição abrangente do veículo presente na imagem para fins de avaliação de seguro. Inclua detalhes como a marca, modelo, ano de fabricação, condição geral do veículo, quaisquer danos visíveis, características especiais e outros detalhes relevantes que possam afetar a avaliação do seguro. Além disso, sinta-se à vontade para adicionar qualquer informação adicional que considere importante para uma avaliação precisa do seguro do veículo. Lembre-se de que uma descrição detalhada contribuirá para uma avaliação mais precisa do seguro.',
                                 ],
                                 [
                                     'type' => 'image_url',
