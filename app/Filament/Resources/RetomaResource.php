@@ -40,7 +40,12 @@ class RetomaResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('marca'),
+                Tables\Columns\TextColumn::make('modelo'),
+                Tables\Columns\TextColumn::make('ano'),
+                Tables\Columns\TextColumn::make('quilometragem'),
+                Tables\Columns\TextColumn::make('descricao'),
+
             ])
             ->filters([
                 //
