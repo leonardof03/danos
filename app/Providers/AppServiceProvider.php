@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Retoma;
+use App\Models\Retoma2;
 use App\Observers\RetomaObserver;
+use App\Observers\Retoma2Observer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Retoma::observe(RetomaObserver::class);
+        Retoma2::observe(Retoma2Observer::class);
+
+
     }
+
 }
